@@ -1,11 +1,15 @@
 import './App.css'
+import NavBar from "@/components/Navbar"
 
-function App() {
+function App () {
 
   return (
-    <div>
-    </div>
+  <>
+    <NavBar/>
+  </>
   )
 }
+
+
 
 export default App
