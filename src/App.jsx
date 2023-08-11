@@ -1,15 +1,47 @@
-import {createPortal} from "react-dom"
 import './App.css'
+import { auth } from "./firebase-server/firebase";
+import { onAuthStateChanged } from 'firebase/auth';
+import AuthenticateUserPage from "@/components/AuthenticateUserPage"
+
+import { createPortal } from "react-dom"
+import { useEffect, useState } from "react"
 import NavBar from "@/components/Navbar"
 import PropertyCard from "@/components/PropertyCard"
 import PropertyCardFormDialog from "@/components/PropertyCardFormDialog"
-import { useState } from "react"
-
 
 function App () {
   const [properties, setProperties] = useState([])
   const [deletedProperties, setDeletedProperties] = useState([])
   const [showCreatePropertyDialog, setShowCreatePropertyDialog] = useState(false)
+  const [userEmail, setUserEmail] = useState("");
+  const [userPassword, setUserPassword] = useState("");
+  const [user, setUser] = useState({});
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+
+
+// check if user is signed in or not
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setIsLoggedIn(true);
+        setUser(true);
+      } else {
+        setIsLoggedIn(false);
+        setUser(null);
+      }
+    });
+    return () => {
+      unsubscribe();
+    }
+  }, [])
+
+
+  const signInEmailInput = (e) => {
+  setUserEmail(e.target.value)
+  }
+  const signInPasswordInput = (e) => {
+  setUserPassword(e.target.value)
+  }
 
 
 function handleShowPropertyDialog() {
@@ -40,8 +72,11 @@ const deleteSelectedProperties = () => {
 }
 
 return (
+  <div>
+    { !isLoggedIn ? <AuthenticateUserPage userEmailSignIn={signInEmailInput}  userPasswordSignIn={signInPasswordInput} userEmail={userEmail}   userPassword={userPassword} />
+    :
   <>
-    <NavBar/>
+    <NavBar />
     <section className="py-2 my-4 border-2 shadow-md bg-neutral-50 mx-2" >
       <h3 className="py-2 pl-4 text-22 font-medium border-b-2 border-neutral-300 ">My Properties</h3>
       <div className="relative px-2 mt-4 flex gap-4" >
@@ -80,7 +115,8 @@ return (
     })}
       </div>
     </section>
-  </>
+  </>}
+  </div>
   )
 }
 
