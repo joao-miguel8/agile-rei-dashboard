@@ -1,14 +1,18 @@
 import { auth } from '../firebase-server/firebase'
 import { signOut } from "firebase/auth"
 
+
+
+
 const LogoutButton = () => {
+
   const logOut = async () => {
     try {
-        await signOut(auth)
+        await signOut(auth);
     } catch(error) {
     console.error(error);
-    }
-    };
+  }
+};
 
   return (
     <button onClick={logOut} className='flex gap-2' > <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
@@ -18,4 +22,5 @@ const LogoutButton = () => {
 )
 }
 
-export default LogoutButton
+
+export default LogoutButton;

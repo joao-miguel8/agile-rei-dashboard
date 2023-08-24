@@ -25,7 +25,7 @@ const renderStatusColors =
               <div className='text-14 font-medium' >
               <h4 className="text-20 self-center word-spacing:90px" >{name}</h4>
               </div>
-              <span className={`h-fit py-1 px-2 rounded-full text-12  ${renderStatusColors.renderVacant}  ${renderStatusColors.renderInRepair} ${renderStatusColors.renderRented} `}>{status}</span>
+              {/* <span className={`h-fit py-1 px-2 rounded-full text-12  ${renderStatusColors.renderVacant}  ${renderStatusColors.renderInRepair} ${renderStatusColors.renderRented} `}>{status}</span> */}
             </div>
                 <div className=" flex gap-5 py-2 overflow-auto text-gray-600 px-2" >
                 { tags.length > 1 ? tags.map((tag, index) => {

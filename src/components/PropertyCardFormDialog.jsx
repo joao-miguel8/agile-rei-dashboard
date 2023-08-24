@@ -1,38 +1,46 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import { addDoc, collection } from "firebase/firestore";
+import { db } from '../firebase-server/firebase'
+function PropertyCardFormDialogModal({properties, setProperties, closeDialog } ) {
 
-
-function PropertyCardFormDialogModal({properties, setProperties, closeDialog}) {
 
 // Storing our property Status Options
-  const propertyStatus = {
-    vacant: "Vacant",
-    rented: "Rented",
-    inRepair: "In Repair",
-  }
+  // const propertyStatus = [
+  //   {vacant: "Vacant"},
+  //   {rented: "Rented"},
+  //  { inRepair: "In Repair"}
+  // ]
 
   // Creating property form schema
   const initialPropertyData = {
-    id: 0,
+    id: "",
     image: "",
     name: "",
-    status: propertyStatus.vacant,
-    tags: "",
+    status: "",
+    tags: [],
     address: "",
   }
 
   // creating state for form data object
   const [formData, setFormData] = useState({...initialPropertyData})
 
-// handling our form data being added to state variable
-const handleFormData = (e) => {
-e.preventDefault()
-setProperties([
-  ...properties,
-      {...formData, id: properties.length}
-]);
-// resetting form every submit
-setFormData({...initialPropertyData});
-}
+
+  const addPropertyCard = async (e) => {
+ e.preventDefault()
+ try {
+  const propertiesCollection = collection(db, "properties")
+
+  const propertyData = await addDoc(propertiesCollection, {...formData})
+  setProperties((prevState) => [...prevState])
+  console.log(propertyData);
+ } catch (error) {
+ console.error(error);
+ }
+ // resetting form every submit
+ // setFormData({...initialPropertyData});
+ }
+
+
 
 // formatting tags in form data from a string to array of strings
 function formatTagsInput(e) {
@@ -52,7 +60,7 @@ function formatTagsInput(e) {
           </svg>
           </button>
       </div>
-      <form onSubmit={handleFormData} className="flex flex-col gap-2 mt-4">
+      <form onSubmit={addPropertyCard} className="flex flex-col gap-2 mt-4">
               <label className="text-14 font-medium" htmlFor="">Property Image:</label>
               <input onChange={(e) => setFormData({...formData ,image: e.target.files ? URL.createObjectURL(e.target.files[0]) : null })}
                 accept="image/*" type="file" id="property-img" name="property-img" className="text-14"/>
@@ -62,8 +70,8 @@ function formatTagsInput(e) {
               <input onChange={(e) =>  setFormData({...formData, name: e.target.value})}  type="text" value={formData.name} className="border outline-0"  />
              <label className="mt-3 text-14 font-medium" >Property Status:</label>
              <select onChange={(e) => setFormData({...formData, status: e.target.value})} className={`border w-fit`} name={formData.status} id="">
-            {Object.keys(propertyStatus).map((key, index) => {
-            return <option value={propertyStatus[key]} key={index} >{propertyStatus[key]}</option>
+            {Object.keys(status).map((key, index) => {
+            return <option value={status[key]} key={index} >{status[key]}</option>
            })}</select>
           <label className="mt-3 text-14 font-medium">Property Unit Details:</label>
           <span className="text-12 text-gray-400" >ex. 2 bedroom, 2 bathroom, pool </span>
