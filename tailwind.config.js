@@ -12,7 +12,7 @@ while (i <= maxFontSize) {
 
 
 export default {
-  content: [    
+  content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",],
   theme: {
@@ -20,7 +20,9 @@ export default {
     extend: {      
       }
     },
-    plugins: [],
+    plugins: [
+      require('tailwind-scrollbar-hide')
+    ],
   }
 
 
