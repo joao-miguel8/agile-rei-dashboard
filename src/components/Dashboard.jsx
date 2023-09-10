@@ -2,6 +2,8 @@ import "../App.css";
 import { auth, db } from "../firebase-server/firebase";
 import { createPortal } from "react-dom";
 import { useEffect, useState } from "react";
+import { collection, getDocs } from "firebase/firestore";
+import { setProperties } from "../redux/reducers/properties";
 
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
@@ -9,8 +11,7 @@ import NavBar from "@/components/Navbar";
 import PropertyCard from "@/components/PropertyCard";
 import PropertyCardFormDialog from "@/components/PropertyCardFormDialog";
 import LogoutButton from "@/components/LogoutButton";
-import { collection, getDocs } from "firebase/firestore";
-import { setProperties } from "../redux/reducers/properties";
+import MobileHeader from "./MobileHeader";
 
 function Dashboard() {
 	const dispatch = useDispatch();
@@ -65,9 +66,7 @@ function Dashboard() {
 
 	return (
 		<div>
-			<Link to={"/"}>
-				<LogoutButton />
-			</Link>
+			<MobileHeader />
 			<NavBar />
 			<section>
 				<h3 className="mt-20 py-2 pl-4 text-22 font-medium">My Properties</h3>
