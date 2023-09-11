@@ -1,47 +1,32 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Dashboard from '@/components/Dashboard';
-import ErrorPage from '@/components/ErrorPage';
-import Login from '@/components/Login';
-import CreateAnAccount from '@/components/CreateAccount'
-import { auth } from "./firebase-server/firebase";
-function App () {
+import { Route, createBrowserRouter, createRoutesFromElements, RouterProvider } from "react-router-dom";
+import Dashboard from "@/components/Dashboard";
+import Properties from "./components/properties";
+import Notes from "./components/Notes";
+import Contacts from "./components/Contacts";
+import ErrorPage from "@/components/ErrorPage";
+import Login from "@/components/Login";
+import CreateAnAccount from "@/components/CreateAccount";
 
-
-
-
-  const router = createBrowserRouter([
-    {
-path: "/",
-element: <Login/>,
-    },
-    {
-      path: "/dashboard",
-      element: <Dashboard />,
-    },
-    {
-      path: "login/",
-      element: <Login />
-    },
-    {
-      path: "createAccount/",
-      element: <CreateAnAccount />
-    },
-    {
-      path: "*",
-      errorElement: <ErrorPage />,
-    }
-  ])
-
-
-
-  return (
-    <>
-    <RouterProvider router={router} />
-  </>
-  )
+const router = createBrowserRouter(
+	createRoutesFromElements(
+		<Route>
+			<Route path="/" element={<Login />} />
+			<Route path="/dashboard" element={<Dashboard />} />
+			<Route path="/properties" element={<Properties />} />
+			<Route path="/notes" element={<Notes />} />
+			<Route path="/contacts" element={<Contacts />} />
+			<Route path="/login" element={<Login />} />
+			<Route path="/createAccount" element={<CreateAnAccount />} />
+			<Route path="*" element={<ErrorPage />} />
+		</Route>
+	)
+);
+function App() {
+	return (
+		<>
+			<RouterProvider router={router} />
+		</>
+	);
 }
 
-
-
-
-export default App
+export default App;

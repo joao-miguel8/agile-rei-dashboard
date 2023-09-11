@@ -1,16 +1,12 @@
 import "../App.css";
-import { auth, db } from "../firebase-server/firebase";
+import { db } from "../firebase-server/firebase";
 import { createPortal } from "react-dom";
 import { useEffect, useState } from "react";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, addDoc } from "firebase/firestore";
 import { setProperties } from "../redux/reducers/properties";
-
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
-import NavBar from "@/components/Navbar";
 import PropertyCard from "@/components/PropertyCard";
 import PropertyCardFormDialog from "@/components/PropertyCardFormDialog";
-import LogoutButton from "@/components/LogoutButton";
 import MobileHeader from "./MobileHeader";
 
 function Dashboard() {
@@ -18,26 +14,26 @@ function Dashboard() {
 
 	const { properties } = useSelector(state => state.propertiesList);
 	console.log(properties);
-
 	const [deletedProperties, setDeletedProperties] = useState([]);
 	const [showCreatePropertyDialog, setShowCreatePropertyDialog] = useState(false);
 
 	const getPropertyData = async () => {
 		try {
 			const arrayOfProperties = [];
-			const propertyQuery = await getDocs(collection(db, "properties"));
-			propertyQuery.forEach(doc => {
-				const ourData = doc.data();
-				arrayOfProperties.push(ourData);
+			const propertiesRef = await getDocs(collection(db, "properties"));
+			propertiesRef.forEach(doc => {
+				const dataFetch = doc.data();
+				arrayOfProperties.push(dataFetch);
 			});
 			dispatch(setProperties(arrayOfProperties));
 		} catch (error) {
 			console.error(error);
 		}
+		console.log("rerenderEffect01");
 	};
+
 	useEffect(() => {
 		getPropertyData();
-		console.log("inside of useEffect");
 	}, []);
 
 	function handleShowPropertyDialog() {
@@ -67,7 +63,6 @@ function Dashboard() {
 	return (
 		<div>
 			<MobileHeader />
-			<NavBar />
 			<section>
 				<h3 className="mt-20 py-2 pl-4 text-22 font-medium">My Properties</h3>
 				<div className="relative px-2 flex gap-4">
@@ -94,18 +89,7 @@ function Dashboard() {
 					</button>
 				</div>
 				<div className="w-full pl-2 mt-8 flex gap-4 overflow-x-auto scrollbar-hide">
-					{properties ? (
-						properties.map(property => (
-							<PropertyCard
-								key={property.id} // Assuming 'id' is a unique identifier for each property
-								propertyData={property}
-								onCardDelete={() => handleRemoveProperty(property.id)}
-								isSelected={deletedProperties.includes(property.id)}
-							/>
-						))
-					) : (
-						<p>Loading properties...</p> // Display a loading message while properties are being fetched
-					)}
+					{properties ? properties.map(property => <PropertyCard key={property.id} propertyData={property} onCardDelete={() => handleRemoveProperty(property.id)} isSelected={deletedProperties.includes(property.id)} />) : <p>Loading properties...</p>}
 				</div>
 			</section>
 		</div>

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { collection, doc, setDoc, addDoc } from "firebase/firestore";
+import { collection, addDoc } from "firebase/firestore";
 import { db } from "../firebase-server/firebase";
 
 function PropertyCardFormDialogModal({ properties, setProperties, closeDialog }) {
@@ -22,11 +22,11 @@ function PropertyCardFormDialogModal({ properties, setProperties, closeDialog })
 	// creating state for our form data object
 	const [formData, setFormData] = useState({ ...initialPropertyData });
 
-	// add property formdata into our database
+	// add property formdata into database
 	const addPropertyCard = async e => {
 		e.preventDefault();
 		try {
-			const addDocToDB = await addDoc(collection(db, "properties"), formData);
+			const propertiesRef = await addDoc(collection(db, "properties"), formData);
 		} catch (error) {
 			console.error(error);
 		}
