@@ -14,3 +14,5 @@ export const propertiesList = createSlice({
 
 export const { setProperties } = propertiesList.actions;
 export const propertiesReducer = propertiesList.reducer;
+
+export const selectProperties = state => state.propertiesList.properties;
