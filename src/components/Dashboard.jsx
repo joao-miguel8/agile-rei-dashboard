@@ -1,20 +1,20 @@
+import classNames from "classnames";
 import "../App.css";
 import { db } from "../firebase-server/firebase";
 import { createPortal } from "react-dom";
 import { useEffect, useState } from "react";
 import { collection, getDocs } from "firebase/firestore";
-import { setProperties } from "../redux/reducers/properties";
-import { useDispatch, useSelector } from "react-redux";
 import PropertyCard from "@/components/PropertyCard";
 import PropertyCardFormDialog from "@/components/PropertyCardFormDialog";
 import MobileHeader from "./MobileHeader";
-import classNames from "classnames";
+import { setProperties } from "../redux/reducers/properties";
+import { useDispatch, useSelector } from "react-redux";
+import { selectProperties } from "../redux/reducers/properties";
 
 function Dashboard() {
 	const dispatch = useDispatch();
+	const properties = useSelector(selectProperties);
 
-	const { properties } = useSelector(state => state.propertiesList);
-	console.log(properties);
 	const [deletedProperties, setDeletedProperties] = useState([]);
 	const [showCreatePropertyDialog, setShowCreatePropertyDialog] = useState(false);
 	const [isPropertiesOptionsHidden, setIsPropertiesOptionsHidden] = useState(true);
@@ -39,6 +39,7 @@ function Dashboard() {
 
 	function handleShowPropertyDialog() {
 		setShowCreatePropertyDialog(!showCreatePropertyDialog);
+		setIsPropertiesOptionsHidden(true);
 	}
 
 	// function handleCardSelection(id) {
@@ -101,10 +102,10 @@ function Dashboard() {
 					</div>
 				</div>
 				{/* if add property button clicked render our form dialog */}
-				{showCreatePropertyDialog ? createPortal(<PropertyCardFormDialog properties={properties} setProperties={setProperties} closeDialog={handleShowPropertyDialog} />, document.getElementById("modal-portal")) : null}
+				{showCreatePropertyDialog ? createPortal(<PropertyCardFormDialog closeDialog={handleShowPropertyDialog} />, document.getElementById("modal-portal")) : null}
 				{/* Render My Properties Listing */}
 				<div className="w-full pl-2 flex gap-4 overflow-x-auto scrollbar-hide">
-					{properties ? properties.map(property => <PropertyCard key={property.id} propertyData={property} onCardDelete={() => handleRemoveProperty(property.id)} isSelected={deletedProperties.includes(property.id)} />) : <p>Loading properties...</p>}
+					{properties ? properties.map(property => <PropertyCard propertyData={property} key={property.id} onCardDelete={() => handleRemoveProperty(property.id)} isSelected={deletedProperties.includes(property.id)} />) : <p>Loading properties...</p>}
 				</div>
 			</section>
 		</div>

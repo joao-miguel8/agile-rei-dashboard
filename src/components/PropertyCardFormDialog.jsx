@@ -1,8 +1,18 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { collection, addDoc } from "firebase/firestore";
-import { db } from "../firebase-server/firebase";
+import { db, storage } from "../firebase-server/firebase";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { useDispatch, useSelector } from "react-redux";
+import { setProperties } from "../redux/reducers/properties";
+import { selectProperties } from "../redux/reducers/properties";
 
-function PropertyCardFormDialogModal({ properties, setProperties, closeDialog }) {
+function PropertyCardFormDialogModal({ closeDialog }) {
+	const dispatch = useDispatch();
+	const properties = useSelector(selectProperties);
+	console.log(properties);
+	// set state for tag input to format tags as array on form submit
+	const [tagInput, setTagInput] = useState("");
+	console.log(tagInput);
 	// Storing our property Status Options
 	const propertyStatus = {
 		vacant: "Vacant",
@@ -18,25 +28,30 @@ function PropertyCardFormDialogModal({ properties, setProperties, closeDialog })
 		tags: [],
 		address: "",
 	};
-
 	// creating state for our form data object
 	const [formData, setFormData] = useState({ ...initialPropertyData });
 
-	// add property formdata into database
+	// add property form data into database
 	const addPropertyCard = async e => {
 		e.preventDefault();
+
 		try {
 			const propertiesRef = await addDoc(collection(db, "properties"), formData);
+			dispatch(setProperties([...properties, formData]));
+			console.log(properties);
 		} catch (error) {
 			console.error(error);
 		}
+		closeDialog();
 	};
 
-	// formatting tags in form data from a string to array of strings
-	function formatTagsInput(e) {
-		const inputValue = e.target.value;
-		const formattedValue = inputValue.split(",");
-		setFormData({ ...formData, tags: formattedValue });
+	function handleTagsInput(e) {
+		setTagInput(
+			e.target.value.split(",").map(tag => {
+				return tag.trim().replace(/ {2,}/g, " ");
+			})
+		);
+		setFormData({ ...formData, tags: tagInput });
 	}
 
 	return (
@@ -56,14 +71,14 @@ function PropertyCardFormDialogModal({ properties, setProperties, closeDialog })
 							<label className="text-14 font-medium" htmlFor="">
 								Property Image:
 							</label>
-							<input onChange={e => setFormData({ ...formData, image: e.target.files ? URL.createObjectURL(e.target.files[0]).slice(5) : null })} accept="image" type="file" id="property-img" name="property-img" className="text-14" />
+							<input required onChange={e => handleUploadImageFile(e, setFormData, formData)} accept="image" type="file" id="property-img" name="property-img" className="text-14" />
 							<label className="mt-3 text-14 font-medium">Property Name:</label>
 							<input required maxLength={40} onChange={e => setFormData({ ...formData, name: e.target.value })} type="text" value={formData.name} className="border outline-0" />
 							<label className="mt-3 text-14 font-medium">Property Status:</label>
 							<select onChange={e => setFormData({ ...formData, status: e.target.value })} className={`border w-fit`} name={formData.status}>
-								{Object.entries(propertyStatus).map(([key, value], index) => {
+								{Object.entries(propertyStatus).map(([key, value]) => {
 									return (
-										<option value={value} key={key}>
+										<option value={value} key={value}>
 											{value}
 										</option>
 									);
@@ -71,7 +86,7 @@ function PropertyCardFormDialogModal({ properties, setProperties, closeDialog })
 							</select>
 							<label className="mt-3 text-14 font-medium">Property Unit Details:</label>
 							<span className="text-12 text-gray-400">ex. 2 bedroom, 2 bathroom, pool </span>
-							<input maxLength={36} onChange={formatTagsInput} name="tags" type="text" value={formData.tags} className="border outline-0" />
+							<input maxLength={36} onChange={e => handleTagsInput(e)} name="tags" type="text" value={formData.tagInput} className="border outline-0" />
 							<label className="text-14 font-medium" htmlFor="">
 								Property Address:
 							</label>
@@ -85,6 +100,39 @@ function PropertyCardFormDialogModal({ properties, setProperties, closeDialog })
 				</div>
 			}
 		</>
+	);
+}
+
+// store image in firebase with Storage provided by firebase
+function handleUploadImageFile(e, setFormData, formData) {
+	const imageFile = e.target.files[0];
+	const storageRef = ref(storage, `propertyCardImage/${imageFile.name}`);
+	const uploadTask = uploadBytesResumable(storageRef, imageFile);
+
+	uploadTask.on(
+		"state_changed",
+		snapshot => {
+			const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+			console.log("Upload is " + progress + "% done");
+			switch (snapshot.state) {
+				case "paused":
+					console.log("Upload is paused");
+					break;
+				case "running":
+					console.log("Upload is running");
+					break;
+			}
+		},
+		error => {
+			// Handle unsuccessful uploads
+			console.error(error);
+		},
+		() => {
+			getDownloadURL(uploadTask.snapshot.ref).then(downloadURL => {
+				console.log("File available at", downloadURL);
+				setFormData({ ...formData, image: downloadURL });
+			});
+		}
 	);
 }
 

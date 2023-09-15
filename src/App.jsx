@@ -1,6 +1,6 @@
 import { Route, createBrowserRouter, createRoutesFromElements, RouterProvider } from "react-router-dom";
-import Dashboard from "@/components/Dashboard";
-import Properties from "./components/properties";
+import Dashboard from "./components/Dashboard";
+import PropertiesPage from "./components/properties-page/PropertiesPage";
 import Notes from "./components/Notes";
 import Contacts from "./components/Contacts";
 import ErrorPage from "@/components/ErrorPage";
@@ -12,7 +12,7 @@ const router = createBrowserRouter(
 		<Route>
 			<Route path="/" element={<Login />} />
 			<Route path="/dashboard" element={<Dashboard />} />
-			<Route path="/properties" element={<Properties />} />
+			<Route path="/properties" element={<PropertiesPage />} />
 			<Route path="/notes" element={<Notes />} />
 			<Route path="/contacts" element={<Contacts />} />
 			<Route path="/login" element={<Login />} />
