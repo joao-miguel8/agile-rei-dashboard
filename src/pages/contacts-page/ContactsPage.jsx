@@ -1,7 +1,7 @@
 import React from "react";
-import MobileHeader from "./MobileHeader";
+import MobileHeader from "../../components/common/MobileHeader";
 
-function Contacts() {
+function ContactsPage() {
 	return (
 		<>
 			<MobileHeader />
@@ -10,4 +10,4 @@ function Contacts() {
 	);
 }
 
-export default Contacts;
+export default ContactsPage;

@@ -1,9 +1,9 @@
 import { auth } from "@/firebase-server/firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { setEmail, setPassword } from "../redux/reducers/login";
+import { setEmail, setPassword } from "../../redux/reducers/login";
 import { useDispatch, useSelector } from "react-redux";
 
-const CreateAnAccount = () => {
+const CreateAccountPage = () => {
 	const dispatch = useDispatch();
 	const emailInput = useSelector(state => state.userAuthForm.emailInput);
 	const passwordInput = useSelector(state => state.userAuthForm.passwordInput);
@@ -43,4 +43,4 @@ const CreateAnAccount = () => {
 	);
 };
 
-export default CreateAnAccount;
+export default CreateAccountPage;
