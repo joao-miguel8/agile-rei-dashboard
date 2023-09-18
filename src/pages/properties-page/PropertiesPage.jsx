@@ -1,15 +1,14 @@
-import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setProperties } from "../../redux/reducers/properties";
 import { useEffect } from "react";
 import { db } from "../../firebase-server/firebase";
 import { collection, getDocs } from "firebase/firestore";
-import MobileHeader from "../MobileHeader";
+import MobileHeader from "../../components/common/MobileHeader";
 import PropertyCardGalleryView from "./propertyCardGalleryView";
+import SearchBar from "../../components/common/SearchBar";
 
-function Properties() {
+function PropertiesPage() {
 	const dispatch = useDispatch();
-	const { properties } = useSelector(state => state.propertiesList);
 
 	const getPropertyData = async () => {
 		try {
@@ -25,6 +24,7 @@ function Properties() {
 		}
 	};
 
+	// get initial property data from database on first render
 	useEffect(() => {
 		getPropertyData();
 	}, []);
@@ -32,9 +32,10 @@ function Properties() {
 	return (
 		<>
 			<MobileHeader />
-			<PropertyCardGalleryView propertyData={properties} />
+			<SearchBar />
+			<PropertyCardGalleryView />
 		</>
 	);
 }
 
-export default Properties;
+export default PropertiesPage;

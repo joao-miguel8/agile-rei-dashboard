@@ -6,8 +6,8 @@ export const propertiesList = createSlice({
 		properties: [],
 	},
 	reducers: {
-		setProperties: (state, properties) => {
-			state.properties = properties.payload;
+		setProperties: (state, action) => {
+			state.properties = action.payload;
 		},
 	},
 });

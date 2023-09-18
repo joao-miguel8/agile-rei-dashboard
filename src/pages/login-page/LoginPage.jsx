@@ -1,12 +1,12 @@
 import { useDispatch, useSelector } from "react-redux";
-import { setEmail, setPassword } from "../redux/reducers/login";
-import { auth, googleProvider } from "../firebase-server/firebase";
+import { setEmail, setPassword } from "../../redux/reducers/login";
+import { auth, googleProvider } from "../../firebase-server/firebase";
 import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { Link, useNavigate } from "react-router-dom";
 import googleLogo from "@/assets/img/google-logo.svg";
 import Logout from "@/assets/icons/Logout";
 
-function Login() {
+function LoginPage() {
 	const dispatch = useDispatch();
 	const emailInput = useSelector(state => state.userAuthForm.emailInput);
 	const passwordInput = useSelector(state => state.userAuthForm.passwordInput);
@@ -85,4 +85,4 @@ function Login() {
 	);
 }
 
-export default Login;
+export default LoginPage;

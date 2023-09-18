@@ -1,18 +1,17 @@
 import { useState } from "react";
 import { collection, addDoc } from "firebase/firestore";
-import { db, storage } from "../firebase-server/firebase";
+import { db, storage } from "../../firebase-server/firebase";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { useDispatch, useSelector } from "react-redux";
-import { setProperties } from "../redux/reducers/properties";
-import { selectProperties } from "../redux/reducers/properties";
+import { setProperties } from "../../redux/reducers/properties";
+import { selectProperties } from "../../redux/reducers/properties";
 
 function PropertyCardFormDialogModal({ closeDialog }) {
 	const dispatch = useDispatch();
 	const properties = useSelector(selectProperties);
-	console.log(properties);
 	// set state for tag input to format tags as array on form submit
 	const [tagInput, setTagInput] = useState("");
-	console.log(tagInput);
+
 	// Storing our property Status Options
 	const propertyStatus = {
 		vacant: "Vacant",

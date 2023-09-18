@@ -1,7 +1,7 @@
 import React from "react";
-import MobileHeader from "./MobileHeader";
+import MobileHeader from "../../components/common/MobileHeader";
 
-function Notes() {
+function NotesPage() {
 	return (
 		<>
 			<MobileHeader />
@@ -10,4 +10,4 @@ function Notes() {
 	);
 }
 
-export default Notes;
+export default NotesPage;

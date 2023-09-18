@@ -1,17 +1,17 @@
 import classNames from "classnames";
-import "../App.css";
-import { db } from "../firebase-server/firebase";
+import "@/App.css";
+import { db } from "../../firebase-server/firebase";
 import { createPortal } from "react-dom";
 import { useEffect, useState } from "react";
 import { collection, getDocs } from "firebase/firestore";
-import PropertyCard from "@/components/PropertyCard";
-import PropertyCardFormDialog from "@/components/PropertyCardFormDialog";
-import MobileHeader from "./MobileHeader";
-import { setProperties } from "../redux/reducers/properties";
+import PropertyCard from "../../components/common/propertyCard";
+import PropertyCardFormDialog from "../../components/common/PropertyCardFormDialog";
+import MobileHeader from "../../components/common/MobileHeader";
+import { setProperties } from "../../redux/reducers/properties";
 import { useDispatch, useSelector } from "react-redux";
-import { selectProperties } from "../redux/reducers/properties";
+import { selectProperties } from "../../redux/reducers/properties";
 
-function Dashboard() {
+function DashboardPage() {
 	const dispatch = useDispatch();
 	const properties = useSelector(selectProperties);
 
@@ -112,4 +112,4 @@ function Dashboard() {
 	);
 }
 
-export default Dashboard;
+export default DashboardPage;

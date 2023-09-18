@@ -2,6 +2,7 @@ import ArrowIcon from "@/assets/icons/Arrow";
 
 function PropertyCard(propertyData, key, onCardDelete, isSelected) {
 	const { address, id, image, name, status, tags } = propertyData.propertyData;
+
 	const handleRemoveProperty = () => {
 		onCardDelete(cardData?.FormData.id);
 	};
